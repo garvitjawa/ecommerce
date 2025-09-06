@@ -6,10 +6,6 @@ import { useProducts } from '../contexts/ProductsContext';
 import { useCart } from '../contexts/CartContext';
 import './CartPage.css';
 
-interface CartItem {
-  productId: string;
-  quantity: number;
-}
 
 const CartPage: React.FC = () => {
   const { user, logout } = useAuth();
