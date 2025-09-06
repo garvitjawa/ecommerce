@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser({
         _id: 'temp-id',
         name: savedUsername,
-        cart: []
+        cart: [],
       });
     }
     setIsLoading(false);
@@ -61,22 +61,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const response = await apiService.login({ username, password });
-      
-      setToken(response.token);
+
+      // 1️⃣ Store token immediately in localStorage
       localStorage.setItem('token', response.token);
       localStorage.setItem('username', username);
-      
-      // Create user object with the logged-in username
+
+      // 2️⃣ Update state
+      setToken(response.token);
       setUser({
         _id: 'temp-id',
         name: username,
-        cart: []
+        cart: [],
       });
-      
+
       toast.success(`Welcome back, ${username}! 🎉`);
-      
+
+      // 3️⃣ Optional: force components to mount with token ready
+      // window.location.reload();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
       setError(errorMessage);
@@ -91,13 +94,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       await apiService.signup({ username, password });
-      
-      // After successful signup, automatically log the user in
+
+      // After signup, immediately login and store token
       await login(username, password);
+
       toast.success(`Account created successfully! Welcome, ${username}! 🎉`);
-      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Signup failed';
       setError(errorMessage);
@@ -126,9 +129,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     error,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

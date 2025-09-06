@@ -22,7 +22,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-
   if (loading) {
     return (
       <div className="home-container">
@@ -54,12 +53,8 @@ const HomePage: React.FC = () => {
       <main className="home-main">
         <div className="products-section">
           <h2>Our Products</h2>
-          
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+
+          {error && <div className="error-message">{error}</div>}
 
           <div className="products-grid">
             {products.map((product, index) => (
